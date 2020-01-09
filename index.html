@@ -15,7 +15,7 @@
   </div>
   <div class="row p-5 m-5">
     <div class="col-sm-4 bg-dark">
-      <form action="/action_page.php">
+      <form>
         <div class="form-group">
           <label class="text text-white">Princicple Amount:</label>
           <input type="number" class="form-control" placeholder="Enter Amount" id="Amount">
@@ -181,6 +181,9 @@
         $(this).click(fillOnClickTagForAmounts)
       });
       $("button[type=submit]").click(fillResults)
+      $("form").submit(function(e){
+        e.preventDefault();
+      });
     }
 
     $(document).ready(initailize);
