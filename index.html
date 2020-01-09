@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Interest Calculator</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -9,10 +9,185 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body class="bg-dark">
+  <div class="container-fluid bg-dark text-white text-center">
+    <h1>Simple Interest Calculator</h1>
+  </div>
+  <div class="row p-5 m-5">
+    <div class="col-sm-4 bg-dark">
+      <form action="/action_page.php">
+        <div class="form-group">
+          <label class="text text-white">Princicple Amount:</label>
+          <input type="number" class="form-control" placeholder="Enter Amount" id="Amount">
+        </div>
+        <div class="form-group">
+          <label class="text text-white">Interest Rate:</label>
+          <input type="number" step="0.1" class="form-control" placeholder="Enter Interest Rate" id="Interest">
+        </div>
+        <div class="form-group">
+          <label class="text text-white">Duration in Months:</label>
+          <input type="number" class="form-control" placeholder="Number Of Months" id="Months">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    <div class="col-sm-5 bg-dark">
+      <table class=" table table-hover table-striped table-dark table-borderless ">
+        <thead>
+          <th>
+            Results
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <th>
+              Princicple Amount
+            </th>
+            <td id="input-amount"></td>
+          </tr>
+          <tr>
+            <th>
+              Interest Earned
+            </th>
+            <td id="interest-earned"></td>
+          </tr>
+          <tr>
+            <th>
+              Total Amount
+            </th>
+            <td id="total-amount"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-3">
+      <table class=" table table-hover table-striped table-dark">
+        <thead>
+          <p class="text text-white">
+            Quick Selects
+          </p>
+          <tr>
+            <th>
+              Months
+            </th>
+            <th>
+              Interest Rates
+            </th>
+            <th>
+              Amounts
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="months-1" >1</td>
+            <td id="rate-4" >4</td>
+            <td id="amount-1000" >1000</td>
+          </tr>
+          <tr>
+            <td id="months-3" >3</td>
+            <td id="rate-4.5" >4.5</td>
+            <td id="amount-5000" >5000</td>
+          </tr>
+          <tr>
+            <td id="months-6" >6</td>
+            <td id="rate-5" >5</td>
+            <td id="amount-10000" >10000</td>
+          </tr>
+          <tr>
+            <td id="months-12" >12</td>
+            <td id="rate-5.5" >5.5</td>
+            <td id="amount-50000" >50000</td>
+          </tr>
+          <tr>
+            <td id="months-24" >24</td>
+            <td id="rate-6" >6</td>
+            <td id="amount-100000" >100000</td>
+          </tr>
+          <tr>
+            <td id="months-36" >36</td>
+            <td id="rate-7" >7</td>
+            <td id="amount-500000" >500000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<div class="jumbotron text-center">
-  <h1>Hello</h1>
-</div>
+  <script>
+    function fillOnClickTagForMonths(){
+      months = $(this).attr('id').split("-")
+      $("#Months").val(months[1])
+    }
+
+    function fillOnClickTagForInterest(){
+      months = $(this).attr('id').split("-")
+      $("#Interest").val(months[1])
+    }
+
+    function fillOnClickTagForAmounts(){
+      months = $(this).attr('id').split("-")
+      $("#Amount").val(months[1])
+    }
+
+    function formatNumber(number){
+     number_str = number.toString();
+     var thousands_part = number % 1000;
+     if(thousands_part == 0){
+      thousands_part = "0";
+     }
+     if(thousands_part < 10){
+      thousands_part = "0"+thousands_part;
+     }
+     if(thousands_part < 100){
+      thousands_part = "0"+thousands_part;
+     }
+     if(number_str.length <=3){
+       return number_str;
+     }
+     else if(number_str.length <=5 ){
+        return Math.floor(number / 1000) + "," + thousands_part;
+     }
+     else {
+        result = "";
+        result = result + thousands_part;
+        number = Math.floor(number / 1000)
+        while(number > 100){
+          result = number % 100 + "," + result;
+          number = Math.floor(number / 100);
+        }
+        return number + "," + result;
+     }
+    }
+
+    function fillResults(){
+      var amount_entered = $("#Amount").val();
+      var no_of_months = $("#Months").val();
+      var interest_rate = $("#Interest").val();
+      $("#input-amount").text(formatNumber(parseInt(amount_entered)));
+      var interest_gained = Math.round(amount_entered * (interest_rate/100) * (no_of_months/12));
+      $("#interest-earned").text(formatNumber(interest_gained));
+      $("#total-amount").text(formatNumber(interest_gained+parseInt(amount_entered)));
+    }
+
+    function initailize(){
+      $('td[id^=months-]').each(function(){
+        $(this).click(fillOnClickTagForMonths)
+      });
+      $('td[id^=rate-]').each(function(){
+        $(this).click(fillOnClickTagForInterest)
+      });
+      $('td[id^=amount-]').each(function(){
+        $(this).click(fillOnClickTagForAmounts)
+      });
+      $("button[type=submit]").click(fillResults)
+    }
+
+    $(document).ready(initailize);
+
+
+  </script>
+
+
 </body>
 </html>
